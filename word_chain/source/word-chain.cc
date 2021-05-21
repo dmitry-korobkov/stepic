@@ -3,14 +3,12 @@
 #include <ctime>
 
 #include <word-chain.h>
+#include <word-chain-graph.h>
 
 namespace WordChain {
 
-WordChain::WordChain() {
-}
-
-WordChain::~WordChain() {
-}
+WordChain::WordChain() {}
+WordChain::~WordChain() {}
 
 void WordChain::generate(uint32_t size) {
 
@@ -19,7 +17,7 @@ void WordChain::generate(uint32_t size) {
     std::srand(std::time(nullptr));
     last = (char)('a' + std::rand() % 26);
 
-    while (size--) {
+    for (uint32_t id = 0; id < size; ++id) {
 
         std::string word;
 
@@ -29,15 +27,35 @@ void WordChain::generate(uint32_t size) {
         word.push_back(first);
         word.push_back(last);
 
-        words.insert(word);
+        this->words.insert({id, word});
     }
 }
 
 void WordChain::print_words(std::ostream& os) {
 
-    for (std::string const& word : this->words) {
-        os << word << std::endl;
+    os << "Words:    ";
+    for (auto it = words.begin(); it != words.end(); ++it) {
+        os << it->second;
+        if (std::next(it) != words.end()) {
+            os << ",";
+        }
     }
+    os << ";" << std::endl;
+}
+
+void WordChain::search() {
+
+    Graph *pGraph = new Graph(this->words);
+
+    for (uint32_t ix = 1; ix < words.size(); ++ix) {
+        pGraph = new Graph(this->words, pGraph);
+        std::cout << ix << std::endl;
+    }
+
+    pGraph->print(std::cout);
+    pGraph->cuttage();
+
+    delete pGraph;
 }
 
 } // namespace wordchain

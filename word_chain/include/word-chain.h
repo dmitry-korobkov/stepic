@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <map>
 #include <string>
 
 namespace WordChain {
@@ -11,8 +12,11 @@ public:
 
     void generate(uint32_t size);
     void print_words(std::ostream& os);
+
+    void search();
+
 private:
-    std::multiset<std::string> words;
+    std::map<uint32_t, std::string> words;
 };
 
 } // namespace wordchain
